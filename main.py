@@ -22,6 +22,7 @@ from modules import (
     PdfCompiler,
     PaperScheduler
 )
+from modules.notifications import NotificationManager, send_test_notification
 
 
 def setup_logging(config: dict) -> logging.Logger:
@@ -219,9 +220,28 @@ def run_collector(config: dict, logger: logging.Logger) -> bool:
             logger.info("=" * 60)
             logger.info("Collection completed successfully!")
             logger.info("=" * 60)
+
+            # Send notification
+            try:
+                notification_config = config.get("notifications", {})
+                notifier = NotificationManager(notification_config)
+                total_papers = sum(len(paper_list) for paper_list in grouped_papers.values())
+                notifier.send_notification(total_papers, pdf_path)
+            except Exception as e:
+                logger.warning(f"Failed to send notification: {e}")
+
             return True
         else:
             logger.error("PDF compilation failed")
+
+            # Send failure notification
+            try:
+                notification_config = config.get("notifications", {})
+                notifier = NotificationManager(notification_config)
+                notifier.send_notification(0, "", error="PDF compilation failed")
+            except Exception:
+                pass  # Don't fail on notification errors
+
             return False
 
     except Exception as e:
@@ -280,6 +300,18 @@ Examples:
         help="Open config file in default editor for keyword editing"
     )
 
+    parser.add_argument(
+        "--test-notify",
+        action="store_true",
+        help="Send a test notification to verify notification setup"
+    )
+
+    parser.add_argument(
+        "--setup-schedule",
+        action="store_true",
+        help="Set up automatic scheduled execution (cron/LaunchAgent)"
+    )
+
     args = parser.parse_args()
 
     # Load configuration
@@ -291,6 +323,30 @@ Examples:
         editor = os.environ.get('EDITOR', 'nano')
         logger.info(f"Opening {args.config} in {editor}...")
         os.system(f"{editor} {args.config}")
+        return
+
+    # Handle --test-notify
+    if args.test_notify:
+        print("Sending test notification...")
+        notification_config = config.get("notifications", {})
+        success = send_test_notification(notification_config)
+        if success:
+            print("✓ Test notification sent!")
+            print("  Check your desktop/system for the notification.")
+        else:
+            print("⚠ Test notification failed.")
+            print("  For system notifications, ensure your OS supports desktop notifications.")
+            print("  For email notifications, configure email settings in config.yaml.")
+        return
+
+    # Handle --setup-schedule
+    if args.setup_schedule:
+        print("Setting up scheduled execution...")
+        if os.path.exists("setup-schedule.sh"):
+            os.execv("/bin/bash", ["bash", "setup-schedule.sh"])
+        else:
+            print("Error: setup-schedule.sh not found")
+            sys.exit(1)
         return
 
     # Handle --status

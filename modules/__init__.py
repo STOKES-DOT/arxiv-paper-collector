@@ -10,6 +10,8 @@ from .paper_filter import PaperFilter
 from .latex_generator import LatexGenerator
 from .pdf_compiler import PdfCompiler
 from .scheduler import PaperScheduler
+from .notifications import NotificationManager, send_test_notification
+from .config_loader import ConfigLoader
 
 __all__ = [
     "ArxivFetcher",
@@ -17,4 +19,7 @@ __all__ = [
     "LatexGenerator",
     "PdfCompiler",
     "PaperScheduler",
+    "NotificationManager",
+    "send_test_notification",
+    "ConfigLoader",
 ]

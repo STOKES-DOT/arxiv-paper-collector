@@ -68,3 +68,18 @@ logging:
 max_papers: 50             # Maximum number of papers to include in report
 abstract_max_length: 1000  # Maximum abstract length in report
 
+# ============================================
+# NOTIFICATION SETTINGS
+# ============================================
+notifications:
+  # Desktop/system notification (requires compatible OS)
+  system_notification: true
+
+  # Email notification (optional)
+  email_enabled: false
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  email_from: "your-email@gmail.com"
+  email_to: "your-email@gmail.com"
+  email_password: "your-app-password"  # Use app-specific password, not regular password
+

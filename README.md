@@ -2,121 +2,80 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Cross-platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](https://github.com/)
 
 An automated Python tool that fetches the latest papers from arXiv related to electronic structure theory and artificial intelligence, filters them by keywords, and generates formatted PDF reports using LaTeX.
 
 ## Features
 
-- **Automated Daily Collection**: Runs automatically at 10:00 AM every day
-- **Keyword Filtering**: Filters papers by customizable keywords (electronic structure, AI/ML)
-- **LaTeX Reports**: Generates professional PDF reports with paper summaries
-- **Configurable**: Easy YAML-based configuration for keywords and settings
-- **Portable**: Self-contained Python package with minimal dependencies
+- **Automated Daily Collection**: Runs automatically at scheduled times
+- **Keyword Filtering**: Filters papers by customizable keywords
+- **LaTeX Reports**: Generates professional PDF reports
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Portable**: Self-contained with easy installation
+- **Configurable**: YAML-based configuration
 
-## Project Structure
-
-```
-arxiv-paper-collector/
-├── config.yaml                 # Configuration file (edit keywords here)
-├── main.py                     # Main entry point
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── modules/
-│   ├── __init__.py
-│   ├── arxiv_fetcher.py        # arXiv API integration
-│   ├── paper_filter.py         # Keyword filtering
-│   ├── latex_generator.py      # LaTeX document generation
-│   ├── pdf_compiler.py         # PDF compilation
-│   └── scheduler.py            # Task scheduling
-├── templates/
-│   └── paper_report.tex        # LaTeX template
-└── output/
-    ├── papers/                 # Generated PDFs
-    ├── latex/                  # Intermediate LaTeX files
-    └── collector.log           # Log file
-```
-
-## Installation
+## Quick Start
 
 ### Prerequisites
 
 - Python 3.8 or higher
-- LaTeX distribution (TeX Live, MiKTeX, or MacTeX)
-- Git (for cloning)
+- LaTeX (TeX Live, MiKTeX, or MacTeX)
 
-### Step 1: Clone the Repository
+### Installation
 
+#### Option 1: Automated Installation (Recommended)
+
+**Linux/macOS:**
 ```bash
 git clone https://github.com/YOUR_USERNAME/arxiv-paper-collector.git
 cd arxiv-paper-collector
+chmod +x install.sh
+./install.sh
 ```
 
-### Step 2: Install Python Dependencies
+**Windows:**
+```cmd
+git clone https://github.com/YOUR_USERNAME/arxiv-paper-collector.git
+cd arxiv-paper-collector
+install.bat
+```
+
+#### Option 2: Manual Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/YOUR_USERNAME/arxiv-paper-collector.git
+cd arxiv-paper-collector
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Install LaTeX (if not installed)
+# macOS: brew install mactex
+# Ubuntu: sudo apt-get install texlive-full
+# Windows: Download from https://miktex.org/
 ```
-
-### Step 3: Verify LaTeX Installation
-
-```bash
-pdflatex --version
-```
-
-If LaTeX is not installed, install it:
-- **macOS**: `brew install mactex`
-- **Ubuntu/Debian**: `sudo apt-get install texlive-full`
-- **Windows**: Download and install [MiKTeX](https://miktex.org/)
 
 ## Usage
 
-### Quick Start
-
-Run the collector once immediately:
+### Basic Commands
 
 ```bash
+# Run once immediately
 python main.py --run
-```
 
-### Edit Keywords
+# Using launcher script
+./run.sh --run       # Linux/macOS
+run.bat --run        # Windows
 
-To customize the keywords used for filtering papers:
-
-```bash
+# Edit keywords
 python main.py --edit-keywords
-```
 
-Or edit `config.yaml` directly:
-
-```yaml
-keywords:
-  electronic_structure:
-    - "electronic structure"
-    - "density functional theory"
-    - "DFT"
-    - "quantum chemistry"
-    # Add your keywords here...
-
-  artificial_intelligence:
-    - "machine learning"
-    - "neural network"
-    - "deep learning"
-    # Add your keywords here...
-```
-
-### Scheduled Execution
-
-Run as a daemon (starts scheduler):
-
-```bash
+# Start scheduled daemon
 python main.py --daemon
-```
 
-The daemon will run the collector daily at the time specified in `config.yaml` (default: 10:00 AM).
-
-### Check Status
-
-```bash
+# Check status
 python main.py --status
 ```
 
@@ -126,85 +85,110 @@ python main.py --status
 |--------|-------------|
 | `--run, -r` | Run the paper collector once immediately |
 | `--daemon, -d` | Run as a daemon with scheduled execution |
-| `--config, -c` | Path to configuration file (default: config.yaml) |
+| `--config, -c` | Path to configuration file |
 | `--status, -s` | Show scheduler status |
 | `--edit-keywords` | Open config file in default editor |
 
 ## Configuration
 
-The `config.yaml` file contains all settings:
+### Config File Locations
 
-### Keywords
+The program searches for configuration files in the following order:
 
-Define keyword groups for filtering papers:
+1. Current directory: `./config.yaml`
+2. User home: `~/.arxiv-collector/config.yaml`
+3. System config: `~/.config/arxiv-collector/config.yaml` (Linux/macOS)
+   or `%APPDATA%\arxiv-collector\config.yaml` (Windows)
+
+### Creating User Config
+
+```bash
+python main.py --edit-keywords
+```
+
+Or manually:
+```bash
+mkdir -p ~/.config/arxiv-collector
+cp config.yaml ~/.config/arxiv-collector/
+```
+
+### Config File Structure
 
 ```yaml
+# Keywords for filtering papers
 keywords:
   electronic_structure:
     - "electronic structure"
     - "DFT"
+    - "quantum chemistry"
   artificial_intelligence:
     - "machine learning"
+    - "neural network"
     - "AI"
-```
 
-### arXiv Categories
-
-Specify which arXiv categories to search:
-
-```yaml
+# arXiv categories to search
 arxiv_categories:
-  - "physics.comp-ph"      # Computational Physics
-  - "physics.chem-ph"      # Chemical Physics
-  - "cs.LG"                # Machine Learning
-```
+  - "physics.comp-ph"
+  - "cs.AI"
 
-### Schedule
+# Date range (days back from today)
+days_back: 1
 
-Set the daily run time:
-
-```yaml
+# Schedule (daily run time)
 schedule:
   hour: 10
   minute: 0
-  timezone: "Asia/Shanghai"
-```
 
-### Output
-
-Configure output directories:
-
-```yaml
+# Output directories
 output:
   pdf_dir: "output/papers"
   latex_dir: "output/latex"
+
+# LaTeX settings
+latex:
+  engine: "xelatex"  # pdflatex, xelatex, or lualatex
 ```
 
-### LaTeX Compilation
+## Project Structure
 
-Configure LaTeX engine:
-
-```yaml
-latex:
-  engine: "pdflatex"       # Options: pdflatex, xelatex, lualatex
-  max_compile_time: 60
-  attempts: 2
+```
+arxiv-paper-collector/
+├── config.yaml              # Configuration file
+├── main.py                  # Main entry point
+├── setup.py                 # pip install setup
+├── requirements.txt         # Python dependencies
+├── install.sh              # Linux/macOS installer
+├── install.bat             # Windows installer
+├── run.sh                  # Linux/macOS launcher
+├── run.bat                 # Windows launcher
+├── modules/
+│   ├── __init__.py
+│   ├── arxiv_fetcher.py    # arXiv API integration
+│   ├── paper_filter.py     # Keyword filtering
+│   ├── latex_generator.py  # LaTeX document generation
+│   ├── pdf_compiler.py     # PDF compilation
+│   ├── scheduler.py        # Task scheduling
+│   └── config_loader.py    # Configuration management
+├── templates/
+│   └── paper_report.tex    # LaTeX template
+└── output/
+    ├── papers/             # Generated PDFs
+    └── latex/              # LaTeX source files
 ```
 
 ## System Integration
 
 ### Cron (Linux/macOS)
 
-Add to crontab (`crontab -e`):
-
+Edit crontab (`crontab -e`):
 ```bash
-0 10 * * * cd /path/to/arxiv-paper-collector && /usr/bin/python3 main.py --run >> output/cron.log 2>&1
+# Run daily at 10 AM
+0 10 * * * cd /path/to/arxiv-paper-collector && python3 main.py --run >> output/cron.log 2>&1
 ```
 
 ### systemd (Linux)
 
 Create `/etc/systemd/system/arxiv-collector.service`:
-
 ```ini
 [Unit]
 Description=ArXiv Paper Collector
@@ -221,56 +205,82 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-Enable and start:
-
+Enable:
 ```bash
 sudo systemctl enable arxiv-collector
 sudo systemctl start arxiv-collector
 ```
 
-## Output
+### Task Scheduler (Windows)
 
-The tool generates:
+1. Open Task Scheduler
+2. Create Basic Task
+3. Set trigger to Daily at 10:00 AM
+4. Action: Start a program
+   - Program: `python`
+   - Arguments: `main.py --run`
+   - Start in: `C:\path\to\arxiv-paper-collector`
 
-1. **PDF Report**: `output/papers/arxiv_papers_YYYY-MM-DD.pdf`
-   - Grouped by keyword categories
-   - Contains title, authors, abstract, and arXiv links
+## Portable Usage
 
-2. **LaTeX Source**: `output/latex/arxiv_papers_YYYY-MM-DD.tex`
-   - Can be customized or compiled manually
+### Using Virtual Environment
 
-3. **Log File**: `output/collector.log`
-   - Detailed run information for debugging
+```bash
+# Create venv
+python3 -m venv venv
 
-## Dependencies
+# Activate
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
 
-- `arxiv` - arXiv API client
-- `PyYAML` - Configuration file parsing
-- `Jinja2` - LaTeX template engine
-- `python-dateutil` - Date handling
+# Install
+pip install -r requirements.txt
+
+# Run
+python main.py --run
+```
+
+### pip Installation
+
+```bash
+pip install -e .
+arxiv-collector --run
+```
 
 ## Troubleshooting
 
 ### LaTeX Compilation Fails
 
-- Ensure LaTeX is installed: `pdflatex --version`
-- Check log file: `output/collector.log`
-- Try different engine in config (xelatex, lualatex)
+1. Ensure LaTeX is installed: `pdflatex --version`
+2. Try different engine in config: `xelatex` or `lualatex`
+3. Check log file: `output/collector.log`
 
 ### No Papers Found
 
-- Check `days_back` setting in config
-- Verify arXiv categories are correct
-- Check keywords are not too specific
+- Increase `days_back` in config
+- Check `arxiv_categories` are correct
+- Verify keywords aren't too specific
 
-### Permission Errors
+### Import Errors
 
-- Ensure output directories are writable
-- Check file permissions: `chmod +x main.py`
+```bash
+pip install --upgrade -r requirements.txt
+```
+
+## Development
+
+```bash
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Format code
+black .
+```
 
 ## Contributing
-
-Contributions are welcome! Please:
 
 1. Fork the repository
 2. Create a feature branch
@@ -280,11 +290,8 @@ Contributions are welcome! Please:
 
 MIT License - see LICENSE file for details
 
-## Author
-
-Jiaoyuan
-
 ## Acknowledgments
 
 - [arXiv](https://arxiv.org/) for open access to scientific papers
-- [arxiv Python library](https://github.com/lukasschwab/arxiv.py) for API access
+- [arxiv.py](https://github.com/lukasschwab/arxiv.py) for API access
+- [Jinja2](https://jinja.palletsprojects.com/) for template engine

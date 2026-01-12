@@ -44,7 +44,7 @@ schedule:
   timezone: "Asia/Shanghai"
 
 # Date range for paper search (days back from today)
-days_back: 1
+days_back: 7
 
 # Output settings
 output:
@@ -54,7 +54,7 @@ output:
 
 # LaTeX compilation settings
 latex:
-  engine: "pdflatex"       # Options: pdflatex, xelatex, lualatex
+  engine: "xelatex"        # Options: pdflatex, xelatex, lualatex
   max_compile_time: 60     # Maximum compilation time in seconds
   attempts: 2              # Number of compilation attempts
 

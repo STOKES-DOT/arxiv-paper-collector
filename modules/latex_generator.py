@@ -66,20 +66,21 @@ class LatexGenerator:
         Returns:
             Escaped text safe for LaTeX
         """
-        replacements = {
-            '&': r'\&',
-            '%': r'\%',
-            '$': r'\$',
-            '#': r'\#',
-            '_': r'\_',
-            '{': r'\{',
-            '}': r'\}',
-            '~': r'\textasciitilde{}',
-            '^': r'\^{}',
-            '\\': r'\textbackslash{}',
-        }
+        # Order matters: replace backslash first, then others
+        replacements = [
+            ('\\', r'\textbackslash{}'),
+            ('&', r'\&'),
+            ('%', r'\%'),
+            ('$', r'\$'),
+            ('#', r'\#'),
+            ('_', r'\_'),
+            ('{', r'\{'),
+            ('}', r'\}'),
+            ('~', r'\textasciitilde{}'),
+            ('^', r'\^{}'),
+        ]
 
-        for char, escaped in replacements.items():
+        for char, escaped in replacements:
             text = text.replace(char, escaped)
 
         return text

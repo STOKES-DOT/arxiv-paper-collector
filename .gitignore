@@ -7,10 +7,17 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+venv/
+env/
+ENV/
 
 # Output directories
 output/
 *.log
+
+# User config (optional - uncomment if you don't want to track config)
+# .config/
+# .arxiv-collector/
 
 # macOS
 .DS_Store
@@ -22,6 +29,7 @@ output/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # LaTeX temporary files
 *.aux
@@ -31,3 +39,7 @@ output/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Windows
+Thumbs.db
+desktop.ini

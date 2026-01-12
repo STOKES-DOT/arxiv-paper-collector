@@ -112,22 +112,25 @@ class PdfCompiler:
             True if successful, False otherwise
         """
         try:
+            # Build command - compile in LaTeX file's directory
             cmd = [
                 self.engine,
                 "-interaction=nonstopmode",
                 "-halt-on-error",
-                f"-output-directory={output_dir}",
-                str(latex_path)
+                latex_path.name  # Just the filename, not full path
             ]
 
             self.logger.debug(f"Running compilation attempt {attempt}: {' '.join(cmd)}")
+
+            # Use the directory containing the LaTeX file as working directory
+            work_dir = str(latex_path.parent)
 
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
                 timeout=self.max_compile_time,
-                cwd=latex_path.parent
+                cwd=work_dir
             )
 
             # Check for errors in output

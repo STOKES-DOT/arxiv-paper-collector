@@ -52,15 +52,15 @@
 
 {% for group_name, papers in groups.items() -%}
 {% if papers -%}
-\section{{ group_name|latex_escape|replace('_', ' ')|title }}
+\section{ {{ group_name|latex_escape|replace('_', ' ')|title }} }
 
 {% for paper in papers -%}
-\subsection*{{ paper.title|latex_escape }}
+\subsection*{ {{ paper.title|latex_escape }} }
 
 \textbf{Authors:} {{ paper.authors|join(', ')|latex_escape }} \\[0.5em]
 
-\textbf{arXiv ID:} \href{{ paper.url }}{{ paper.arxiv_id }} \\
-\textbf{PDF:} \href{{ paper.pdf_url }}{[Download PDF]} \\[0.5em]
+\textbf{arXiv ID:} \href{ {{ paper.url }} }{ {{ paper.arxiv_id }} } \\
+\textbf{PDF:} \href{ {{ paper.pdf_url }} }{ [Download PDF] } \\[0.5em]
 
 \textbf{Published:} {{ paper.published|format_date }} \\[0.5em]
 

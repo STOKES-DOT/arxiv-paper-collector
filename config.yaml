@@ -54,7 +54,7 @@ output:
 
 # LaTeX compilation settings
 latex:
-  engine: "xelatex"        # Options: pdflatex, xelatex, lualatex
+  engine: "xelatex"
   max_compile_time: 60     # Maximum compilation time in seconds
   attempts: 2              # Number of compilation attempts
 

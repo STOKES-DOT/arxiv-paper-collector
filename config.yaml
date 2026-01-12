@@ -1,0 +1,70 @@
+# Arxiv Paper Collector Configuration File
+# You can modify the keywords and other settings here
+
+# Keywords for filtering papers (case-insensitive)
+keywords:
+  electronic_structure:
+    - "electronic structure"
+    - "density functional theory"
+    - "DFT"
+    - "quantum chemistry"
+    - "ab initio"
+    - "first-principles"
+    - "Hartree-Fock"
+    - "post-Hartree-Fock"
+    - "coupled cluster"
+    - "CI"
+    - "quantum Monte Carlo"
+
+  artificial_intelligence:
+    - "machine learning"
+    - "neural network"
+    - "deep learning"
+    - "artificial intelligence"
+    - "AI"
+    - "graph neural network"
+    - "GNN"
+    - "transformer"
+    - "reinforcement learning"
+    - "supervised learning"
+
+# Arxiv categories to search
+arxiv_categories:
+  - "physics.comp-ph"      # Computational Physics
+  - "physics.chem-ph"      # Chemical Physics
+  - "cond-mat.str-el"      # Strongly Correlated Electrons
+  - "cond-mat.mtrl-sci"    # Materials Science
+  - "cs.LG"                # Machine Learning
+  - "cs.AI"                # Artificial Intelligence
+
+# Time settings
+schedule:
+  hour: 10                 # Run at 10:00 AM
+  minute: 0
+  timezone: "Asia/Shanghai"
+
+# Date range for paper search (days back from today)
+days_back: 1
+
+# Output settings
+output:
+  pdf_dir: "output/papers"
+  latex_dir: "output/latex"
+  filename_format: "arxiv_papers_{date}.pdf"
+
+# LaTeX compilation settings
+latex:
+  engine: "pdflatex"       # Options: pdflatex, xelatex, lualatex
+  max_compile_time: 60     # Maximum compilation time in seconds
+  attempts: 2              # Number of compilation attempts
+
+# Logging settings
+logging:
+  level: "INFO"            # DEBUG, INFO, WARNING, ERROR
+  log_file: "output/collector.log"
+  console_output: true
+
+# Paper limits
+max_papers: 50             # Maximum number of papers to include in report
+abstract_max_length: 1000  # Maximum abstract length in report
+

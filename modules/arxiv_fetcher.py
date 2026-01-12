@@ -4,7 +4,7 @@ Fetches papers from arXiv API based on categories and date range
 """
 
 import arxiv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional
 import logging
 
@@ -33,8 +33,8 @@ class ArxivFetcher:
         Returns:
             List of paper dictionaries containing title, authors, abstract, etc.
         """
-        # Calculate date range
-        end_date = datetime.now()
+        # Calculate date range (use timezone-aware datetime)
+        end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=self.days_back)
 
         self.logger.info(f"Fetching papers from {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
@@ -129,8 +129,8 @@ class ArxivFetcher:
         if categories is None:
             categories = self.categories
 
-        # Calculate date range
-        end_date = datetime.now()
+        # Calculate date range (use timezone-aware datetime)
+        end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=self.days_back)
 
         self.logger.info(f"Searching for keywords: {keywords}")

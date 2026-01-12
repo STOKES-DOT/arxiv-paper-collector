@@ -152,7 +152,8 @@ class LatexGenerator:
             "date": datetime.now().strftime("%Y-%m-%d"),
             "groups": sorted_groups,
             "total_papers": total_papers,
-            "total_groups": len(papers)
+            "total_groups": len(papers),
+            "abstract_max_length": abstract_max_length
         }
 
         # Load template
@@ -206,7 +207,7 @@ class LatexGenerator:
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=cyan,
-    pdftitle={{{{ title }}}},
+    pdftitle={{{ title }}},
     pdfauthor={ArXiv Paper Collector}
 }
 
@@ -217,8 +218,8 @@ class LatexGenerator:
   {\normalfont\large\bfseries\color{darkgray}}{\thesubsection}{1em}{}
 
 % Title info
-\title{{{{ title }}}}
-\author{{{{ date }}}}
+\title{ {{ title }} }
+\author{ {{ date }} }
 \date{}
 
 \begin{document}
@@ -227,40 +228,40 @@ class LatexGenerator:
 
 \section*{Summary}
 \begin{itemize}
-    \item Total Papers: {{{{ total_papers }}}}
-    \item Groups: {{{{ total_groups }}}}
-    \item Generated: {{{{ date }}}}
+    \item Total Papers: {{ total_papers }}
+    \item Groups: {{ total_groups }}
+    \item Generated: {{ date }}
 \end{itemize}
 
 \hrule
 \vspace{1em}
 
-{% for group_name, papers in groups.items() %}
-{% if papers %}
-\section{{{{ group_name|latex_escape|replace('_', ' ')|title }}}}
+{% for group_name, papers in groups.items() -%}
+{% if papers -%}
+\section{{{ group_name|latex_escape|replace('_', ' ')|title }}}
 
-{% for paper in papers %}
-\subsection*{{{{ paper.title|latex_escape }}}}
+{% for paper in papers -%}
+\subsection*{{{ paper.title|latex_escape }}}
 
-\textbf{Authors:} {{{{ paper.authors|join(', ')|latex_escape }}}} \\[0.5em]
+\textbf{Authors:} {{ paper.authors|join(', ')|latex_escape }} \\[0.5em]
 
-\textbf{arXiv ID:} \href{{{{{ paper.url }}}}}{{{{{ paper.arxiv_id }}}}} \\[0.5em]
+\textbf{arXiv ID:} \href{{{ paper.url }}}{{{ paper.arxiv_id }}} \\[0.5em]
 
-\textbf{Published:} {{{{ paper.published|format_date }}}} \\[0.5em]
+\textbf{Published:} {{ paper.published|format_date }} \\[0.5em]
 
-\textbf{Categories:} {{{{ paper.categories|join(', ') }}}} \\[1em]
+\textbf{Categories:} {{ paper.categories|join(', ') }} \\[1em]
 
 \textbf{Abstract:}
 
-{{{{ paper.summary|latex_escape|truncate_latex(abstract_max_length) }}}}
+{{ paper.summary|latex_escape|truncate_latex(abstract_max_length) }}
 
 \vspace{1em}
 \hrule
 \vspace{1em}
 
-{% endfor %}
-{% endif %}
-{% endfor %}
+{% endfor -%}
+{% endif -%}
+{% endfor -%}
 
 \end{document}
 """
